@@ -1,0 +1,40 @@
+\documentclass[geye,green,normal,cn,founder]{elegantnote}
+\title{IRSWKG笔记}
+\author{Effron Lu}
+\institute{SEU}
+\version{1.00}
+\date{\zhdate{2021/02/07}}
+\begin{document}
+
+\maketitle
+\section{信息协调（Inforamtion Reconciliation）}
+信息协调实现方法分为两种：
+\begin{enumerate}
+    \item[*] 基于Cascade信息协调协。Cascade协议需要Alice和Bob有一个交互的过程,在交互中纠错。
+    \item[*] 基于纠错码(Error Correcting Code, ECC)，基于纠错码的信息协调只需要一方发送信息即可纠错，但相比较于Cascade协议而 言泄露的信息量会大一点，计算开销也更加大。 
+\end{enumerate}
+
+基于纠错编码的信息协调实现流程如下：
+
+\begin{enumerate}
+    \item Alice随机选择一个比特串$r$，然后通过纠错编码的方式对$r$进行编码，记作$Enc(r)$, $Enc(r)$的长度和量化后的比特串$q_A$的长度一样。 
+    \item Alice计算$SS = q_A \otimes Enc(r)$。 
+    \item Alice把$SS$发送给Bob。 
+    \item Bob收到$SS$后和自己量化得到的比特$q_B$进行异或
+    \item 使用纠错算法得到 $\tilde{r}$,如果$q_B$和$q_A$不一样的比特数在纠错算法的纠错能力范围之内，那么$\tilde{r}$和$r$一样。
+    \item 最后Bob使用纠错码的编码算法对$\tilde{r}$进行编码后和$SS$进行一个异或，就可以得到比特串$q_A$了
+    \item 上述过程归纳为：$q_B^{\prime} = SS \otimes Enc(Dec(SS \otimes q_B)) = SS \otimes Enc(\tilde{r})$
+\end{enumerate}
+
+主流的纠错编码算法:BCH编码、Turbo编码、卷积编码、 LDPC编码、RS编码.
+\section{隐私放大（Privacy Amplification）}
+隐私放大的实现方法可以分为：
+\begin{enumerate}
+    \item 模糊提取器(Fuzzy Extractor)
+    \item 全域哈希函数来(Universal Hashing Functions)
+    \item \textbf{密码学哈希函数实现}(Cryptographic Hash Function)
+\end{enumerate}
+
+密码学哈希函数实现流程：量化出来的这些比特，每256比特为一个分组，隐私增强后输出的最终密钥⻓度减短为128比特。
+  
+\end{document}
